@@ -84,3 +84,8 @@ Each pull has a human-readable guide with the full ladder, the traps, and what t
 CC0 1.0. Public domain. Use the rows in a paper, a spreadsheet, a pricing model, a YouTube video,
 whatever. Attribution welcome, not required. Corrections by issue or PR: if a row is misclassified,
 say which `item_id` and why.
+
+## Browser copy
+
+The same files, with the per-category medians rendered as a table, are served at
+<https://flipworth.silentdirectivellc.com/data/> (schema.org `Dataset` markup, CC0, no signup).
