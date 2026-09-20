@@ -1,15 +1,17 @@
 # ebay-sold-comps
 
-**570 real eBay completed sales across 9 collectible categories, as CSV.** Title, sold price, end
-date, condition, the search keyword that found it, and the eBay item id. Pulled 2026-09-16 to
-2026-09-19, nothing simulated, nothing rounded.
+**2,496 real completed sales across 15 collectible categories, as CSV.** Two sources, kept in
+separate files and never blended: **570 eBay completed sales** (title, sold price, end date,
+condition, the search keyword, the eBay item id) pulled 2026-09-16 to 2026-09-19, and **1,926
+Goodwill closed auctions** (title, hammer price, bid count, end time, seller id) pulled from the
+public Goodwill buyer API. Nothing simulated, nothing rounded.
 
 eBay's own completed-sales view is behind a login, holds about 90 days, and cannot be exported.
 Every "what is it worth" article you can find quotes *asking* prices instead, which is why a press
 story will say a pattern is "worth $25,000" while the same pattern's completed sales sit at $18.99.
 This repo is the boring version: what people actually paid, with the date on every row.
 
-## What is in here
+## Source 1: eBay completed sales (570 rows)
 
 | file | n | median | range | sold between |
 |---|---:|---:|---|---|
@@ -30,6 +32,34 @@ This repo is the boring version: what people actually paid, with the date on eve
 | `data/sterling.csv` | 30 | $128.25 | $13.00 - $3,432.49 | 2026-09-18 |
 
 Columns: `title, sold_price_usd, ended_at, condition, keyword, item_id`.
+
+## Source 2: Goodwill closed auctions (1,926 rows)
+
+`shopgoodwill.com` runs real auctions with a visible bid count and a seller id, and its buyer API
+answers without a login. That seller id is the column the eBay pull does not have, so these rows
+can tell one store's listing run apart from a market.
+
+| file | n | median | range | sold between | sellers |
+|---|---:|---:|---|---|---:|
+| `data/goodwill-costume-jewelry-2026-06.csv` | 527 | $52.00 | $4.99 - $1,235.00 | 2026-06-20 - 06-22 | 65 |
+| `data/goodwill-depression-glass-2026-06.csv` | 257 | $14.99 | $4.99 - $244.00 | 2026-06-20 - 07-02 | 73 |
+| `data/goodwill-film-camera-2026-06.csv` | 273 | $19.99 | $5.99 - $1,556.00 | 2026-06-20 - 06-22 | 72 |
+| `data/goodwill-lego-2026-06.csv` | 438 | $22.25 | $4.99 - $2,240.00 | 2026-06-20 - 06-21 | 63 |
+| `data/goodwill-pocket-watch-2026-06.csv` | 177 | $50.00 | $7.99 - $4,201.00 | 2026-06-21 - 06-30 | 67 |
+| `data/goodwill-vinyl-records-2026-06.csv` | 254 | $19.00 | $5.99 - $380.99 | 2026-06-20 - 06-22 | 52 |
+
+Columns: `item_id, title, sold_price_usd, bids, ended_at, seller_id, category, keyword`.
+`item_id`, `category` and `keyword` are empty in the LEGO file; that pull did not record them.
+
+**These are auctions, so the number is a hammer price, not an asking price and not a negotiated
+one.** Read the bid count next to it: a one-bid close is a reserve, not a market.
+
+**Every median in that table is a raw keyword median and is wrong until you cut it three ways:**
+new stock, multi-item lots, and vintage singles sell at different prices under the same search
+word. The lot problem is the big one and it does not announce itself - 229 of the 527 costume
+jewelry titles contain the word *lot*, and plenty more are lots that never use it, they just carry
+a count ("45 vintage brooches"). On the vinyl pull, splitting beat bundling about **7x**: one
+record sold alone at $17.99, the same record inside a counted lot worked out to $2.50.
 
 ## Four things the rows show that the internet gets wrong
 
@@ -78,6 +108,12 @@ Each pull has a human-readable guide with the full ladder, the traps, and what t
 - [Sterling silver flatware](https://flipworth.silentdirectivellc.com/guides/sterling-silver-flatware-value)
 - [Vintage Hot Wheels](https://flipworth.silentdirectivellc.com/guides/vintage-hot-wheels-value)
 - [Vintage Le Creuset](https://flipworth.silentdirectivellc.com/guides/vintage-le-creuset-value)
+- [Vintage costume jewelry](https://flipworth.silentdirectivellc.com/guides/vintage-costume-jewelry-value)
+- [Depression glass](https://flipworth.silentdirectivellc.com/guides/depression-glass-value)
+- [Vintage film cameras](https://flipworth.silentdirectivellc.com/guides/vintage-film-camera-value)
+- [Vintage LEGO sets](https://flipworth.silentdirectivellc.com/guides/vintage-lego-sets-value)
+- [Old pocket watches](https://flipworth.silentdirectivellc.com/guides/old-pocket-watch-value)
+- [Vintage vinyl records](https://flipworth.silentdirectivellc.com/guides/vintage-vinyl-records-value)
 
 ## License
 
