@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://silentdirectivellc-hub.github.io/ebay-sold-comps/sitemap.xml
